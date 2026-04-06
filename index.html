@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Misterio de Sofía</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rosa:     #e8185a;
+    --rosa2:    #ff4d8d;
+    --amarillo: #f5c800;
+    --verde:    #4caf50;
+    --verde2:   #2e7d32;
+    --morado:   #6a1b9a;
+    --naranja:  #e65100;
+    --azul:     #0277bd;
+    --blanco:   #ffffff;
+    --crema:    #fff8e7;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--crema);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ─── CURSOR PERSONALIZADO ─── */
+  .cursor {
+    position: fixed; z-index: 9999; pointer-events: none;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--rosa); mix-blend-mode: multiply;
+    transform: translate(-50%,-50%);
+    transition: transform .12s ease, width .2s, height .2s, background .3s;
+  }
+  .cursor-ring {
+    position: fixed; z-index: 9998; pointer-events: none;
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 2px solid var(--amarillo);
+    transform: translate(-50%,-50%);
+    transition: transform .25s ease, width .2s, height .2s;
+  }
+  body:hover .cursor { opacity:1; }
+
+  /* ─── PARTÍCULAS ─── */
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .particle  { position: absolute; border-radius: 50%; opacity: .15; animation: floatP linear infinite; }
+  @keyframes floatP {
+    0%   { transform: translateY(110vh) rotate(0deg); }
+    100% { transform: translateY(-10vh) rotate(360deg); }
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative; z-index: 2;
+    min-height: 100svh;
+    background: linear-gradient(160deg, var(--rosa) 0%, #c2185b 55%, #880e4f 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px 24px 60px;
+    overflow: hidden;
+    clip-path: ellipse(110% 92% at 50% 0%);
+  }
+
+  /* Ondas decorativas */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 15% 25%, rgba(255,255,255,.12) 0%, transparent 50%),
+      radial-gradient(circle at 85% 70%, rgba(245,200,0,.15) 0%, transparent 45%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    background: rgba(255,255,255,.18);
+    border: 1.5px solid rgba(255,255,255,.35);
+    color: white; border-radius: 50px;
+    padding: 6px 18px; font-size: .85rem; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeDown .6s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Fredoka One', cursive;
+    text-align: center;
+    line-height: 1;
+    animation: fadeDown .7s .1s ease both;
+  }
+  .hero-title .el {
+    display: block;
+    color: rgba(255,255,255,.8);
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    margin-bottom: 4px;
+  }
+  .hero-title .misterio {
+    display: block;
+    color: var(--blanco);
+    font-size: clamp(3rem, 11vw, 6.5rem);
+    text-shadow: 5px 5px 0 rgba(0,0,0,.18);
+    letter-spacing: -1px;
+  }
+  .hero-title .de {
+    display: block;
+    color: rgba(255,255,255,.8);
+    font-size: clamp(1.8rem, 6vw, 3rem);
+  }
+  .hero-title .sofia {
+    display: block;
+    color: var(--amarillo);
+    font-size: clamp(3.5rem, 13vw, 7.5rem);
+    text-shadow: 5px 5px 0 rgba(0,0,0,.18), 0 0 40px rgba(245,200,0,.3);
+    letter-spacing: -2px;
+  }
+
+  .hero-author {
+    color: rgba(255,255,255,.85);
+    font-size: clamp(.9rem, 2.5vw, 1.1rem);
+    font-weight: 700; margin-top: 14px;
+    animation: fadeDown .7s .2s ease both;
+    letter-spacing: .5px;
+  }
+  .hero-author span { color: var(--amarillo); }
+
+  /* Poster del libro */
+  .hero-poster {
+    margin: 28px 0 24px;
+    position: relative;
+    animation: fadeUp .8s .3s ease both;
+  }
+  .hero-poster img {
+    width: min(340px, 88vw);
+    border-radius: 20px;
+    box-shadow:
+      0 24px 60px rgba(0,0,0,.35),
+      0 0 0 6px rgba(255,255,255,.15),
+      0 0 0 12px rgba(245,200,0,.2);
+    display: block;
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .hero-poster:hover img { transform: scale(1.03) rotate(-1deg); }
+  .hero-poster .poster-badge {
+    position: absolute; top: -14px; right: -14px;
+    background: var(--amarillo);
+    color: #795548;
+    font-family: 'Fredoka One', cursive;
+    font-size: .85rem; padding: 8px 14px;
+    border-radius: 50px;
+    box-shadow: 0 4px 0 #b8970a, 0 6px 16px rgba(0,0,0,.2);
+    animation: spin 4s linear infinite;
+  }
+  @keyframes spin { 0%{transform:rotate(-8deg)} 50%{transform:rotate(8deg)} 100%{transform:rotate(-8deg)} }
+
+  .hero-deco {
+    font-size: 1.6rem; letter-spacing: 6px;
+    animation: fadeDown .7s .4s ease both;
+    margin-bottom: 8px;
+  }
+
+  .hero-cta {
+    background: var(--amarillo);
+    color: #795548;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem; padding: 16px 44px;
+    border-radius: 50px; border: none; cursor: pointer;
+    box-shadow: 0 8px 0 #b8970a, 0 12px 30px rgba(0,0,0,.2);
+    transition: transform .15s, box-shadow .15s;
+    animation: fadeUp .7s .5s ease both;
+    text-decoration: none; display: inline-block;
+  }
+  .hero-cta:hover  { transform: translateY(-4px); box-shadow: 0 12px 0 #b8970a, 0 18px 40px rgba(0,0,0,.25); }
+  .hero-cta:active { transform: translateY(4px);  box-shadow: 0 4px 0 #b8970a; }
+
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(24px)}  to{opacity:1;transform:translateY(0)} }
+
+  /* ─── SINOPSIS ─── */
+  .sinopsis {
+    position: relative; z-index: 2;
+    background: var(--blanco);
+    max-width: 720px; margin: -30px auto 0;
+    border-radius: 28px;
+    padding: 36px 32px;
+    box-shadow: 0 12px 50px rgba(0,0,0,.1);
+    text-align: center;
+  }
+  .sinopsis-title {
+    font-family: 'Fredoka One', cursive;
+    color: var(--rosa); font-size: clamp(1.4rem,5vw,2rem);
+    margin-bottom: 16px;
+  }
+  .sinopsis p {
+    color: #555; font-size: clamp(.9rem,2.5vw,1.05rem);
+    line-height: 1.8; font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .sinopsis p:last-child { margin-bottom: 0; }
+  .sinopsis-quote {
+    background: linear-gradient(135deg, #ffe0ef, #fff8e7);
+    border-left: 4px solid var(--rosa);
+    border-radius: 0 16px 16px 0;
+    padding: 16px 20px; margin-top: 20px;
+    text-align: left;
+  }
+  .sinopsis-quote p {
+    font-style: italic; color: #777; font-size: .9rem; margin:0;
+  }
+  .sinopsis-quote cite {
+    display: block; margin-top: 8px;
+    font-family: 'Fredoka One', cursive;
+    color: var(--rosa); font-size: .85rem; font-style: normal;
+  }
+
+  /* ─── SECCIÓN EPISODIOS ─── */
+  .ep-section {
+    position: relative; z-index: 2;
+    padding: 60px 20px 20px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .ep-section-title {
+    font-family: 'Fredoka One', cursive;
+    color: var(--rosa);
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+    text-align: center; margin-bottom: 8px;
+    text-shadow: 3px 3px 0 rgba(232,24,90,.1);
+  }
+  .ep-section-sub {
+    text-align: center; color: #888;
+    font-weight: 700; font-size: .95rem;
+    margin-bottom: 40px;
+  }
+
+  .ep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(260px,100%), 1fr));
+    gap: 20px;
+  }
+
+  .ep-card {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(0,0,0,.1);
+    text-decoration: none;
+    display: block;
+    position: relative;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+    animation: cardIn .6s ease both;
+  }
+  @keyframes cardIn { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  .ep-card:hover { transform: translateY(-10px) rotate(.8deg); box-shadow: 0 20px 50px rgba(0,0,0,.18); }
+  .ep-card:nth-child(2n):hover { transform: translateY(-10px) rotate(-.8deg); }
+
+  .ep-card-header {
+    padding: 28px 24px 20px;
+    position: relative; overflow: hidden;
+  }
+  .ep-card-header::after {
+    content: '';
+    position: absolute; bottom: -20px; left: -10px; right: -10px;
+    height: 40px;
+    background: inherit;
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+  .ep-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.5rem; line-height: 1;
+    color: rgba(255,255,255,.25);
+    position: absolute; right: 16px; top: 10px;
+  }
+  .ep-emoji { font-size: 2.4rem; margin-bottom: 8px; display: block; }
+  .ep-title {
+    font-family: 'Fredoka One', cursive;
+    color: white; font-size: 1.5rem;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.2);
+    position: relative; z-index: 1;
+  }
+  .ep-card-body {
+    background: white; padding: 18px 22px 22px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ep-info { font-size: .82rem; color: #aaa; font-weight: 700; }
+  .ep-info span { display: block; }
+  .ep-arrow {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    transition: transform .2s;
+  }
+  .ep-card:hover .ep-arrow { transform: translateX(4px); }
+
+  /* Colores por episodio */
+  .ep-1 .ep-card-header { background: linear-gradient(135deg, #e8185a, #c2185b); }
+  .ep-1 .ep-arrow { background: #ffe0ef; color: #e8185a; }
+  .ep-2 .ep-card-header { background: linear-gradient(135deg, #6a1b9a, #4a148c); }
+  .ep-2 .ep-arrow { background: #f3e5f5; color: #6a1b9a; }
+  .ep-3 .ep-card-header { background: linear-gradient(135deg, #e65100, #bf360c); }
+  .ep-3 .ep-arrow { background: #fff3e0; color: #e65100; }
+  .ep-4 .ep-card-header { background: linear-gradient(135deg, #0277bd, #01579b); }
+  .ep-4 .ep-arrow { background: #e1f5fe; color: #0277bd; }
+  .ep-5 .ep-card-header { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+  .ep-5 .ep-arrow { background: #e8f5e9; color: #2e7d32; }
+
+  /* ─── AUTOR ─── */
+  .autor-section {
+    position: relative; z-index: 2;
+    background: linear-gradient(135deg, var(--rosa) 0%, #c2185b 100%);
+    margin: 50px 20px;
+    border-radius: 28px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 12px 50px rgba(232,24,90,.3);
+    max-width: 720px;
+    margin-left: auto; margin-right: auto;
+    overflow: hidden;
+  }
+  .autor-section::before {
+    content: '🌻🐞🌼🦋🌸🌻🐞🌼🦋🌸';
+    position: absolute; top: 10px; left: 0; right: 0;
+    font-size: 1.1rem; opacity: .2; letter-spacing: 4px;
+    white-space: nowrap; overflow: hidden;
+  }
+  .autor-title {
+    font-family: 'Fredoka One', cursive;
+    color: var(--amarillo); font-size: clamp(1.2rem,4vw,1.6rem);
+    margin-bottom: 10px; position: relative; z-index: 1;
+  }
+  .autor-name {
+    font-family: 'Fredoka One', cursive;
+    color: white; font-size: clamp(1.5rem,5vw,2.2rem);
+    text-shadow: 3px 3px 0 rgba(0,0,0,.15);
+    position: relative; z-index: 1; margin-bottom: 14px;
+  }
+  .autor-desc {
+    color: rgba(255,255,255,.85); font-weight: 600;
+    font-size: .95rem; line-height: 1.7;
+    position: relative; z-index: 1;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative; z-index: 2;
+    background: linear-gradient(135deg, var(--verde2) 0%, #0a3d0a 100%);
+    color: white; text-align: center;
+    padding: 50px 20px 36px;
+    font-family: 'Fredoka One', cursive;
+    clip-path: ellipse(110% 100% at 50% 100%);
+  }
+  .footer-logo {
+    font-size: clamp(1.4rem,5vw,2rem);
+    color: var(--amarillo); margin-bottom: 6px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.2);
+  }
+  .footer-sub {
+    font-family: 'Nunito', sans-serif;
+    color: rgba(255,255,255,.7); font-size: .85rem;
+    margin-bottom: 20px;
+  }
+  .footer-eps {
+    display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .footer-eps a {
+    background: rgba(255,255,255,.12);
+    color: white; border-radius: 50px;
+    padding: 7px 16px; font-size: .8rem;
+    text-decoration: none; font-family: 'Fredoka One', cursive;
+    border: 1.5px solid rgba(255,255,255,.2);
+    transition: background .2s;
+  }
+  .footer-eps a:hover { background: rgba(255,255,255,.25); }
+  .footer-copy {
+    font-family: 'Nunito', sans-serif;
+    color: rgba(255,255,255,.45); font-size: .75rem;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @media(max-width:600px){
+    .hero { clip-path: ellipse(120% 88% at 50% 0%); }
+    .sinopsis { margin: -20px 16px 0; padding: 28px 20px; }
+    .autor-section { margin: 40px 16px; padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- PARTÍCULAS -->
+<div class="particles" id="particles"></div>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-tag">📖 Libro Infantil</div>
+
+  <h1 class="hero-title">
+    <span class="el">El</span>
+    <span class="misterio">Misterio</span>
+    <span class="de">de</span>
+    <span class="sofia">Sofía</span>
+  </h1>
+
+  <p class="hero-author">por <span>Karina Alejandra Pimentel López</span></p>
+
+  <div class="hero-poster">
+    <img src="poster.jpeg" alt="El Misterio de Sofía - Portada">
+    <div class="poster-badge">✨ ¡Ya disponible!</div>
+  </div>
+
+  <div class="hero-deco">🌻 🐞 🌼 🦋 🌸</div>
+
+  <a href="#episodios" class="hero-cta">¡Leer ahora! 🔍</a>
+</section>
+
+<!-- ─── SINOPSIS ─── -->
+<section class="sinopsis reveal">
+  <div class="sinopsis-title">📖 ¿De qué trata?</div>
+  <p>
+    Esta historia trata de una niña que nació en el continente europeo y a lo largo de esta trama
+    se enfrentará a varios obstáculos y misterios que la ponen en peligro.
+  </p>
+  <p>
+    La protagonista es muy curiosa, algo peculiar en ella, pero no sabe que el destino le puede
+    jugar en contra. La curiosidad le llevará a descubrir secretos y enfrentar desafíos.
+  </p>
+  <p>
+    La familia, los amigos, todos pueden ser lo que nadie cree — esto hace que Sofía viva momentos
+    de incertidumbre o posibles conflictos con las personas que ama.
+  </p>
+  <p>
+    Sus escenarios se desarrollaron entre <strong>Italia y México</strong>, en ciudades ficticias.
+    <strong>Este es un cuento para todo público.</strong>
+  </p>
+  <div class="sinopsis-quote">
+    <p>
+      "El misterio de Sofía es un gran dulce al corazón: soñar, imaginar, reír con Karina
+      es posible en el mundo infinito de las letras..."
+    </p>
+    <cite>— Rogerio Hershberger · México progresa leyendo A.C.</cite>
+  </div>
+</section>
+
+<!-- ─── EPISODIOS ─── -->
+<section class="ep-section" id="episodios">
+  <h2 class="ep-section-title reveal">🗺️ Los 5 Episodios</h2>
+  <p class="ep-section-sub reveal">Toca cada episodio para comenzar la aventura</p>
+
+  <div class="ep-grid">
+
+    <a href="episodio-1.html" class="ep-card ep-1" style="animation-delay:.05s">
+      <div class="ep-card-header">
+        <span class="ep-num">I</span>
+        <span class="ep-emoji">🔍</span>
+        <div class="ep-title">Episodio I</div>
+      </div>
+      <div class="ep-card-body">
+        <div class="ep-info">
+          <span>4 ilustraciones</span>
+          <span>🌻 El inicio</span>
+        </div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="episodio-2.html" class="ep-card ep-2" style="animation-delay:.1s">
+      <div class="ep-card-header">
+        <span class="ep-num">II</span>
+        <span class="ep-emoji">🌙</span>
+        <div class="ep-title">Episodio II</div>
+      </div>
+      <div class="ep-card-body">
+        <div class="ep-info">
+          <span>3 ilustraciones</span>
+          <span>⭐ El misterio crece</span>
+        </div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="episodio-3.html" class="ep-card ep-3" style="animation-delay:.15s">
+      <div class="ep-card-header">
+        <span class="ep-num">III</span>
+        <span class="ep-emoji">🗝️</span>
+        <div class="ep-title">Episodio III</div>
+      </div>
+      <div class="ep-card-body">
+        <div class="ep-info">
+          <span>4 ilustraciones</span>
+          <span>🔥 Los secretos</span>
+        </div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="episodio-4.html" class="ep-card ep-4" style="animation-delay:.2s">
+      <div class="ep-card-header">
+        <span class="ep-num">IV</span>
+        <span class="ep-emoji">🌍</span>
+        <div class="ep-title">Episodio IV</div>
+      </div>
+      <div class="ep-card-body">
+        <div class="ep-info">
+          <span>3 ilustraciones</span>
+          <span>🌊 La verdad</span>
+        </div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="episodio-5.html" class="ep-card ep-5" style="animation-delay:.25s">
+      <div class="ep-card-header">
+        <span class="ep-num">V</span>
+        <span class="ep-emoji">⭐</span>
+        <div class="ep-title">Episodio V</div>
+      </div>
+      <div class="ep-card-body">
+        <div class="ep-info">
+          <span>2 ilustraciones</span>
+          <span>🎉 El gran final</span>
+        </div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ─── AUTORA ─── -->
+<div class="autor-section reveal">
+  <div class="autor-title">✍️ Sobre la autora</div>
+  <div class="autor-name">Karina Alejandra Pimentel López</div>
+  <p class="autor-desc">
+    Una historia nacida del corazón, donde la curiosidad, la amistad y el misterio
+    se entrelazan en escenarios que van de Italia a México.<br><br>
+    🌻 Un cuento para todo público que invita a soñar, imaginar y descubrir
+    que el mundo de las letras no tiene límites.
+  </p>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-logo">El Misterio de Sofía</div>
+  <div class="footer-sub">por Karina Alejandra Pimentel López</div>
+  <div class="footer-eps">
+    <a href="episodio-1.html">Episodio I 🔍</a>
+    <a href="episodio-2.html">Episodio II 🌙</a>
+    <a href="episodio-3.html">Episodio III 🗝️</a>
+    <a href="episodio-4.html">Episodio IV 🌍</a>
+    <a href="episodio-5.html">Episodio V ⭐</a>
+  </div>
+  <div class="footer-copy">🌻 🐞 🌼 · Todos los derechos reservados</div>
+</footer>
+
+<script>
+// ─── CURSOR ───
+const cursor     = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let mx=0, my=0, rx=0, ry=0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx+'px'; cursor.style.top = my+'px';
+});
+(function animRing(){
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  cursorRing.style.left = rx+'px'; cursorRing.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', ()=>{ cursor.style.transform='translate(-50%,-50%) scale(2)'; cursor.style.background='var(--amarillo)'; });
+  el.addEventListener('mouseleave', ()=>{ cursor.style.transform='translate(-50%,-50%) scale(1)'; cursor.style.background='var(--rosa)'; });
+});
+
+// ─── PARTÍCULAS ───
+(function(){
+  const wrap   = document.getElementById('particles');
+  const emojis = ['🌻','🐞','🌸','⭐','🌼','🦋','✨','🍀','🔍','🗝️'];
+  const colors = ['#e8185a','#f5c800','#4caf50','#ff4d8d','#6a1b9a','#e65100','#0277bd'];
+  for(let i=0;i<28;i++){
+    const el=document.createElement('div'); el.className='particle';
+    const size=Math.random()*28+12;
+    el.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${Math.random()*20+12}s;animation-delay:${Math.random()*-24}s;border-radius:50%;`;
+    if(Math.random()>.45){ el.textContent=emojis[Math.floor(Math.random()*emojis.length)]; el.style.background='none'; el.style.fontSize=size+'px'; }
+    wrap.appendChild(el);
+  }
+})();
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
