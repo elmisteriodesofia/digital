@@ -407,12 +407,16 @@
 })();
 
 // ─── FOTOS ───
-// Ep III: 4 propias + 4 Ep I + 3 Ep II = 11 fotos aleatorias
-const ALL_PHOTOS = [
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+
+// Ep III: 4 propias primero (aleatorias), luego Ep I + Ep II (aleatorias)
+const EP3_OWN = [
   { src:'fotos/ep3/foto1.jpeg', emoji:'🗝️' },
   { src:'fotos/ep3/foto2.jpeg', emoji:'🔥' },
   { src:'fotos/ep3/foto3.jpeg', emoji:'🌟' },
   { src:'fotos/ep3/foto4.jpeg', emoji:'🍂' },
+];
+const EP3_PREV = [
   { src:'fotos/ep1/foto1.jpeg', emoji:'🔍' },
   { src:'fotos/ep1/foto2.jpeg', emoji:'🐞' },
   { src:'fotos/ep1/foto3.jpeg', emoji:'🌸' },
@@ -421,9 +425,7 @@ const ALL_PHOTOS = [
   { src:'fotos/ep2/foto2.jpeg', emoji:'⭐' },
   { src:'fotos/ep2/foto3.jpeg', emoji:'💫' },
 ];
-
-function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
-const photos = shuffle(ALL_PHOTOS);
+const photos = [...shuffle(EP3_OWN), ...shuffle(EP3_PREV)];
 
 // ─── EFECTOS ───
 const fxFlash     = document.getElementById('fx-flash');

@@ -434,19 +434,21 @@
 })();
 
 // ─── FOTOS ───
-// Ep II: 3 propias + 4 del Ep I = 7 fotos aleatorias
-const ALL_PHOTOS = [
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+
+// Ep II: 3 propias primero (aleatorias), luego 4 del Ep I (aleatorias)
+const EP2_OWN = [
   { src:'fotos/ep2/foto1.jpeg', emoji:'🌙' },
   { src:'fotos/ep2/foto2.jpeg', emoji:'⭐' },
   { src:'fotos/ep2/foto3.jpeg', emoji:'💫' },
+];
+const EP2_PREV = [
   { src:'fotos/ep1/foto1.jpeg', emoji:'🔍' },
   { src:'fotos/ep1/foto2.jpeg', emoji:'🐞' },
   { src:'fotos/ep1/foto3.jpeg', emoji:'🌸' },
   { src:'fotos/ep1/foto4.jpeg', emoji:'✨' },
 ];
-
-function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
-const photos = shuffle(ALL_PHOTOS);
+const photos = [...shuffle(EP2_OWN), ...shuffle(EP2_PREV)];
 
 // ─── EFECTOS ───
 const fxFlash     = document.getElementById('fx-flash');
